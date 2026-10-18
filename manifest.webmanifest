@@ -1,6 +1,6 @@
 {
-  "name": "Tiny Party",
-  "short_name": "Tiny Party",
+  "name": "Third Party",
+  "short_name": "Third Party",
   "description": "Little board, dice and party games for 1 to 4 players, on one phone or online.",
   "start_url": "./",
   "scope": "./",

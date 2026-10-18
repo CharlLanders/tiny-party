@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Tiny Party</title>
+<title>Third Party</title>
 <meta name="description" content="Little board, dice and party games for 1 to 4 players, on one phone or online.">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Tiny Party">
+<meta name="apple-mobile-web-app-title" content="Third Party">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#F1E9D8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -466,6 +466,14 @@ html.cbm .d.p4::before,html.cbm #score #a4 i::after,html.cbm #wc span:nth-child(
 #tp .rb{display:flex;gap:8px;margin-top:14px}
 #tp .rb button{flex:1;min-height:48px;border:none;border-radius:14px;font-weight:700;font-size:15px;background:color-mix(in srgb,var(--ink) 8%,transparent)}
 #tp .rb .pr{background:var(--ink);color:var(--bg)}
+#ol .oh{margin:8px 0 2px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--mut)}
+#ol .op.wa i{background:none;border:1.5px dashed var(--mut);box-shadow:none}
+#ol .oc{display:flex;gap:4px;flex:none}
+#ol .oc button{min-height:34px;min-width:34px;padding:0 10px;border:none;border-radius:999px;font-size:13px;font-weight:600;background:color-mix(in srgb,var(--ink) 8%,transparent);color:var(--ink)}
+#ol .oc .kx.arm{background:var(--p2);color:#fff}
+#ol .op{min-height:40px}
+#ol .seg.jw{display:flex;gap:4px;padding:4px;border-radius:14px;background:color-mix(in srgb,var(--ink) 7%,transparent);margin:0 0 10px}#ol .seg.jw button{flex:1;min-height:40px;font-size:15px;border:none;border-radius:11px;background:transparent;color:var(--mut);font-weight:600}#ol .seg.jw button.on{background:var(--bg);color:var(--ink);box-shadow:0 1px 4px #00000026,inset 0 0 0 1.5px var(--ink)}
+#rm .rw{margin:0;text-align:center;color:var(--mut)}
 </style>
 <script>
 try{var k=localStorage.getItem('tc-skin')}catch(e){}
@@ -618,7 +626,7 @@ $('gclose').onclick=()=>{setGM(false);gp.focus()};
  gm.addEventListener('touchend',end);gm.addEventListener('touchcancel',end);
  gm.addEventListener('pointerdown',e=>{if(e.pointerType!='mouse'||!e.target.closest('.ghd,.gtl')||e.target.closest('button'))return;start(e.clientY,'top');
   const mv=ev=>move(ev.clientY),up=()=>{removeEventListener('pointermove',mv);removeEventListener('pointerup',up);end()};addEventListener('pointermove',mv);addEventListener('pointerup',up)})}
-gp.onclick=()=>{setLM(false);setGM(gm.hidden)};
+gp.onclick=()=>{setLM(false);if(net&&!net.host&&gm.hidden){toast('Only the host picks the game');return}setGM(gm.hidden)};
 function bindOpt(o){if(!o.querySelector('.tg')){const g=o.dataset.g,tg=document.createElement('span');tg.className='tg';tg.textContent=MP[g]?'2–4 players':AI[g]?'1–2 players':'2 players';o.title=MP[g]?'2 to 4 players':AI[g]?'2 players, or 1 player against the computer':'2 players';o.appendChild(tg)}
  o.onclick=()=>{if(net){setGM(false);netReq('pick',o.dataset.g)}else pickGame(o.dataset.g);gp.focus()};o.onkeydown=e=>{const k=e.key;
  if(k=='Enter'||k==' '){e.preventDefault();o.click()}else if(k=='Escape'){setGM(false);gp.focus()}
@@ -967,8 +975,8 @@ function applyNames(){const dn=SKN[document.documentElement.dataset.skin]||SKN.p
  for(let i=1;i<=4;i++){let n=((net?net.names[i]:CUST[i-1])||'').replace(/\s+/g,' ').trim()||dn[i-1];if(used.includes(n.toLowerCase()))n+=' '+i;used.push(n.toLowerCase());N[i]=n}}
 const nb=$('nb'),nl=$('nl');
 function nameFill(){nl.innerHTML='';const dn=SKN[document.documentElement.dataset.skin]||SKN.parchment,h=document.createElement('h3');h.textContent='Player names';nl.appendChild(h);
- if(net){const r=document.createElement('label'),d=document.createElement('i'),f=document.createElement('input');r.className='nr';d.style.background='var(--p'+net.me+')';
-  f.type='text';f.maxLength=12;f.placeholder=dn[net.me-1];f.value=myName;f.autocomplete='off';f.setAttribute('aria-label','Your name');
+ if(net){const r=document.createElement('label'),d=document.createElement('i'),f=document.createElement('input');r.className='nr';d.style.background=net.me?'var(--p'+net.me+')':'var(--mut)';
+  f.type='text';f.maxLength=12;f.placeholder=dn[net.me-1]||'Your name';f.value=myName;f.autocomplete='off';f.setAttribute('aria-label','Your name');
   f.oninput=()=>setMyName(f.value);f.onkeydown=e=>{if(e.key=='Enter'){e.preventDefault();f.blur();setNames(false)}};
   f.onfocus=()=>nl.classList.add('ty');f.onblur=()=>setTimeout(()=>nl.classList.remove('ty'),150);
   r.appendChild(d);r.appendChild(f);nl.appendChild(r);const p=document.createElement('p');p.className='nt';p.style.marginTop='10px';p.textContent='Online, everyone names themselves on their own device.';nl.appendChild(p);return}
@@ -1011,9 +1019,8 @@ function withSeed(sd,f){const o=Math.random;Math.random=mb32(sd);try{f()}finally
 const np2=()=>MP[cur]?np:2;
 const meTxt=s=>{const a=N[net.me];return a?s.split(a+' to play').join('Your turn').split(a+' wins').join('You win').split(a+' goes again').join('You go again'):s};
 function toast(s){if(replaying)return;tn.textContent=s;tn.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>tn.classList.remove('on'),1100)}
-const others=()=>net.host?net.list.length:Object.keys(net.names).length-1;
-const canAct=()=>!net||(net.host&&!net.list.length)||(turnOf?turnOf():curT)==net.me;
-function play(...a){if(net){if(inq.length||(busyFn&&busyFn()))return;if(!canAct()){if(curT)toast(net.me>np2()?'This game is for 2. You are watching':N[curT]+"'s turn");return}netSend({t:'mv',a,gid})}doMove(...a)}
+const canAct=()=>!net||(net.me>0&&(net.solo||(turnOf?turnOf():curT)==net.me));
+function play(...a){if(net){if(inq.length||(busyFn&&busyFn()))return;if(!canAct()){if(!net.me)toast("You're watching");else if(curT)toast(net.me>np2()?'This game is for 2. You are watching':N[curT]+"'s turn");return}netSend({t:'mv',a,gid})}doMove(...a)}
 function loadPeer(){return window.Peer?Promise.resolve():new Promise((res,rej)=>{const sc=document.createElement('script');sc.src=PEERJS;sc.onload=res;
  sc.onerror=()=>{sc.remove();rej(new Error("Couldn't load online play. Check your connection."))};document.head.appendChild(sc)})}
 function peerErr(e){const k=e&&e.type;
@@ -1021,7 +1028,7 @@ function peerErr(e){const k=e&&e.type;
   /network|server|socket/.test(k||'')?"Couldn't reach the online server. Check your connection.":'Something went wrong. Try again.'}
 let hlog=[];
 function netSend(m,skip){if(!net)return;if(net.host&&m&&(m.t=='start'||m.t=='new'||m.t=='mv')){if(m.t=='start')hlog=[m];else hlog.push(m);if(hlog.length>4000)hlog=hlog.slice(-4000)}
- if(net.host)net.list.forEach((p,i)=>{if(i+2!=skip&&p.conn&&p.conn.open)p.conn.send(m)});else if(net.conn&&net.conn.open)net.conn.send(m)}
+ if(net.host)net.list.forEach(p=>{if(p!==skip&&p.conn&&p.conn.open)p.conn.send(m)});else if(net.conn&&net.conn.open)net.conn.send(m)}
 function pump(){while(inq.length){if(busyFn&&busyFn()){setTimeout(pump,replaying?0:60);return}
  const m=inq.shift();if(m.gid!=gid)continue;applying=true;try{doMove(...m.a)}finally{applying=false}}}
 function netApply(m){
@@ -1030,30 +1037,41 @@ function netApply(m){
  else if(m.t=='new'){uiFresh=true;gid=m.gid;inq=[];stopAI();withSeed(m.seed,()=>reset())}
  else if(m.t=='mv'&&Array.isArray(m.a)){inq.push(m);pump()}}
 /* host */
-function hostRoster(){const nm={1:myName};net.list.forEach((p,i)=>nm[i+2]=p.name);net.names=nm;applyNames();
- net.list.forEach((p,i)=>{if(p.conn&&p.conn.open)p.conn.send({t:'roster',names:nm,you:i+2,away:net.list.map(q=>!!q.away)})});refreshOnline()}
-function hostStart(g,fresh){gid++;const m={t:'start',g,np:MP[g]?Math.max(2,net.list.length+1):2,seed:rnd32(),gid,fresh:fresh?1:0};netSend(m);netApply(m)}
+const members=()=>[net.self].concat(net.list);
+function hostSeats(){const pl=members().filter(m=>m.role=='play').sort((x,y)=>x.ord-y.ord).slice(0,4);members().forEach(m=>m.seat=pl.indexOf(m)+1);return pl}
+function hostRoster(){net.self.name=myName;const pl=hostSeats(),nm={},aw=[false,false,false,false,false];pl.forEach(m=>{nm[m.seat]=m.name;aw[m.seat]=!!m.away});
+ const wt=members().filter(m=>!m.seat).map(m=>({n:m.name,a:!!m.away,h:m===net.self}));
+ net.names=nm;net.me=net.self.seat;net.away=aw;net.watch=wt;net.hs=net.self.seat;net.nPlay=pl.length;net.solo=pl.length<=1;applyNames();
+ net.list.forEach(p=>{if(p.conn&&p.conn.open)p.conn.send({t:'roster',names:nm,you:p.seat,away:aw,watch:wt,wi:members().filter(m=>!m.seat).indexOf(p),hs:net.hs,np:pl.length})});refreshOnline()}
+function hostStart(g,fresh){gid++;const m={t:'start',g,np:MP[g]?Math.max(2,hostSeats().length):2,seed:rnd32(),gid,fresh:fresh?1:0};netSend(m);netApply(m)}
 function hostNew(){gid++;const m={t:'new',seed:rnd32(),gid};netSend(m);netApply(m)}
-function netReq(k,g){if(net.host){if(k=='pick')hostStart(g);else hostNew()}else netSend({t:'req',k,g})}
-function hostRecv(p,d){if(!net||!d||typeof d!='object')return;const sn=net.list.indexOf(p)+2;if(sn<2)return;
- if(d.t=='mv'&&Array.isArray(d.a)){if(d.gid!=gid)return;netSend(d,sn);inq.push(d);pump()}
- else if(d.t=='req'){if(d.k=='pick'&&GAMES.includes(d.g))hostStart(d.g);else if(d.k=='new')hostNew()}
+function netReq(k,g){if(net.host){if(k=='pick')hostStart(g);else hostNew()}else toast('Only the host picks the game')}
+function hostRecv(p,d){if(!net||!d||typeof d!='object'||!net.list.includes(p))return;
+ if(d.t=='mv'&&Array.isArray(d.a)){if(d.gid!=gid||!p.seat)return;netSend(d,p);inq.push(d);pump()}
  else if(d.t=='name'){p.name=String(d.n||'').slice(0,12);hostRoster()}
  else if(d.t=='bye'){p.bye=true;dropSeat(p)}}
-function dropSeat(p){if(!net||!net.host)return;const i=net.list.indexOf(p);if(i<0)return;clearTimeout(p.awayT);net.list.splice(i,1);hostRoster();hostStart(cur,1);toast((p.name||'A player')+' left')}
+function dropSeat(p,msg){if(!net||!net.host)return;const i=net.list.indexOf(p);if(i<0)return;clearTimeout(p.awayT);const sat=!!p.seat;net.list.splice(i,1);hostRoster();if(sat)hostStart(cur,1);toast(msg||(p.name||'Someone')+' left')}
+/* host powers: who plays, the seat order, and removing someone */
+function hostRole(m,r){if(!net||!net.host||m.role==r)return;if(r=='play'&&hostSeats().length>=4){toast('All 4 seats are taken');return}
+ if(r=='play')m.ord=++net.ordN;m.role=r;hostRoster();hostStart(cur,1);toast((m===net.self?'You are':(m.name||'Someone')+' is')+(r=='play'?' playing':' watching'))}
+function hostUp(m){const pl=hostSeats(),i=pl.indexOf(m);if(i<1)return;const o=pl[i-1].ord;pl[i-1].ord=m.ord;m.ord=o;hostRoster();hostStart(cur,1)}
+function hostKick(p){if(!net||!net.host||!net.list.includes(p))return;const c=p.conn;try{if(c&&c.open)c.send({t:'kick'})}catch(e){}p.bye=true;
+ setTimeout(()=>{try{c.close()}catch(e){}},400);dropSeat(p,(p.name||'Someone')+' was removed')}
 function sendSync(p){if(p.conn&&p.conn.open)p.conn.send({t:'sync',log:hlog,won:wonOn})}
 async function hostCreate(want,tries){if(typeof want!='string'||!/^[A-Z0-9]{5}$/.test(want))want=null;if(olBusy&&!want)return;olErr='';olBusy=true;olFill();
  try{await loadPeer()}catch(e){olBusy=false;olErr=e.message;olFill();return}
  const code=want||Array.from({length:5},()=>ABC[Math.random()*ABC.length|0]).join(''),peer=new Peer(PRE+code);
- peer.on('open',()=>{offNp=np;offVs=vs;net={host:true,me:1,code,peer,list:[],names:{}};olBusy=false;ss('tp-host',code);ss('tp-join',null);hostRoster();hostStart(cur,1);if(want)toast('Back online. Game code '+code)});
+ peer.on('open',()=>{offNp=np;offVs=vs;net={host:true,me:1,code,peer,list:[],names:{},ordN:0,self:{name:myName,role:'play',ord:0}};olBusy=false;ss('tp-host',code);ss('tp-join',null);hostRoster();hostStart(cur,1);if(want)toast('Back online. Game code '+code)});
  peer.on('connection',conn=>{let p=null;
   conn.on('open',()=>{if(!net||net.peer!==peer)conn.close()});
   conn.on('data',d=>{if(!net||net.peer!==peer||!d||typeof d!='object')return;
    if(!p){if(d.t!='name')return;const back=d.cid&&net.list.find(q=>q.cid==d.cid);
     if(back){p=back;const old=p.conn;p.conn=conn;p.away=false;clearTimeout(p.awayT);if(old&&old!==conn)try{old.close()}catch(e){}
      p.name=String(d.n||'').slice(0,12);hostRoster();sendSync(p);toast((p.name||'A player')+' is back');return}
-    if(net.list.length>=3){conn.send({t:'full'});setTimeout(()=>conn.close(),600);return}
-    p={conn,name:String(d.n||'').slice(0,12),cid:d.cid||'',away:false};net.list.push(p);hostRoster();hostStart(cur,1);toast('A player joined');return}
+    if(net.list.length>=15){conn.send({t:'full'});setTimeout(()=>conn.close(),600);return}
+    const r=d.role!='watch'&&hostSeats().length<4?'play':'watch';
+    p={conn,name:String(d.n||'').slice(0,12),cid:d.cid||'',away:false,role:r,ord:++net.ordN};net.list.push(p);hostRoster();
+    if(r=='play'){hostStart(cur,1);toast((p.name||'A player')+' joined')}else{sendSync(p);toast((p.name||'Someone')+' is watching')}return}
    hostRecv(p,d)});
   conn.on('close',()=>{if(!p||!net||net.peer!==peer||p.conn!==conn)return;if(p.bye){dropSeat(p);return}
    p.away=true;hostRoster();toast((p.name||'A player')+' lost connection. Waiting for them…');p.awayT=setTimeout(()=>{if(p.away)dropSeat(p)},60000)})});
@@ -1072,14 +1090,16 @@ async function guestJoin(code){if(olBusy)return;code=String(code||'').toUpperCas
  guestConnect(code,fail,()=>clearTimeout(to))}
 function guestConnect(code,fail,ok){const reuse=net&&net.peer&&!net.peer.destroyed?net.peer:null,peer=reuse||new Peer();
  const go=()=>{const conn=peer.connect(PRE+code,{reliable:true,serialization:'json'});if(rj){if(rj.last&&rj.last!==conn&&!rj.last.open)try{rj.last.close()}catch(e){}rj.last=conn}
-  conn.on('open',()=>conn.send({t:'name',n:myName,cid:CID}));
+  conn.on('open',()=>conn.send({t:'name',n:myName,cid:CID,role:net?(net.me?'play':'watch'):(olFill.role||'play')}));
   conn.on('data',d=>{if(!d||typeof d!='object')return;
-   if(d.t=='full'){if(fail)fail('That game already has 4 players.');return}
+   if(d.t=='full'){if(fail)fail('That game is full.');return}
+   if(d.t=='kick'){if(net&&net.conn===conn)leaveOnline('The host removed you from the game.');return}
    if(d.t=='bye'){if(net&&net.conn===conn)leaveOnline('The host ended the game.');return}
    if(d.t=='roster'){
     if(!net){if(ok)ok();offNp=np;offVs=vs;net={host:false,me:d.you,code,peer,conn,names:{}};olBusy=false;ss('tp-join',code);ss('tp-host',null)}
     else if(net.conn!==conn){const old=net.conn;net.conn=conn;net.peer=peer;if(old&&old!==conn)try{old.close()}catch(e){}if(rj){clearTimeout(rj.timer);rj=null;toast('Reconnected')}}
-    net.me=d.you;net.names=d.names||{};net.away=d.away||[];applyNames();refreshOnline();return}
+    const was=net.me,first=!net.rs;net.rs=1;net.me=d.you|0;net.names=d.names||{};net.away=d.away||[];net.watch=d.watch||[];net.wi=d.wi??-1;net.hs=d.hs|0;net.nPlay=d.np|0;net.solo=net.nPlay<=1;applyNames();refreshOnline();
+    if(first&&!net.me&&olFill.role!='watch')toast('All 4 seats are taken, so you are watching');else if(!first&&was!=net.me)toast(net.me?'You are playing':'You are watching now');return}
    if(d.t=='sync'){if(net&&net.conn===conn)replaySync(d);return}
    if(net&&net.conn===conn)netApply(d)});
   conn.on('close',()=>{if(net&&net.conn===conn&&!net.leaving)lostHost()})};
@@ -1109,7 +1129,7 @@ function drawQR(box,url){const paint=()=>{try{const q=window.qrcode(0,'M');q.add
   box.innerHTML='<svg viewBox="-2 -2 '+(n+4)+' '+(n+4)+'" role="img" aria-label="QR code to join this game" shape-rendering="crispEdges"><rect x="-2" y="-2" width="'+(n+4)+'" height="'+(n+4)+'" fill="#fff"/><path d="'+d+'" fill="#111"/></svg><span>Friends nearby can scan this to join</span>'}catch(e){box.remove()}};
  if(window.qrcode){paint();return}const sc=document.createElement('script');sc.src=QRJS;sc.onload=paint;sc.onerror=()=>box.remove();document.head.appendChild(sc)}
 function shareLink(){const u=inviteURL();
- if(navigator.share)navigator.share({title:'Tiny Party',text:'Join my Tiny Party game. Code: '+net.code,url:u}).catch(()=>{});
+ if(navigator.share)navigator.share({title:'Third Party',text:'Join my Third Party game. Code: '+net.code,url:u}).catch(()=>{});
  else if(navigator.clipboard)navigator.clipboard.writeText(u).then(()=>toast('Invite link copied'),()=>toast('Code: '+net.code));else toast('Code: '+net.code)}
 function setMyName(v){myName=String(v).slice(0,12);try{localStorage.setItem('tc-me',myName)}catch(e){}
  if(net){if(net.host)hostRoster();else netSend({t:'name',n:myName})}}
@@ -1121,23 +1141,40 @@ function olFill(){ol.innerHTML='';
   ol.appendChild(mkE('p','nt','Game code'));ol.appendChild(mkE('div','code',net.code));
   const qr=mkE('div','qr');ol.appendChild(qr);drawQR(qr,inviteURL());
   const sb=mkE('button','wide pr','Share invite link');sb.type='button';sb.onclick=shareLink;ol.appendChild(sb);
-  const ps=mkE('div','ps'),cnt=others()+1;
-  const aw=net.host?[false,false].concat(net.list.map(q=>!!q.away)):[false].concat(net.away||[]).map((v,i)=>i==0?false:v);
-  for(let k=1;k<=cnt;k++){const r=mkE('div','op'+(aw[k]?' aw':'')),d=mkE('i');d.style.background='var(--p'+k+')';r.appendChild(d);r.appendChild(mkE('span',null,N[k]));
-   r.appendChild(mkE('em',null,[k==net.me?'You':'',k==1?'Host':'',aw[k]?'reconnecting…':''].filter(Boolean).join(' · ')));ps.appendChild(r)}
+  const ps=mkE('div','ps'),cnt=net.nPlay||0,H=net.host,mem=H?members():[];
+  const ctl=(r,m)=>{if(!H||!m)return;const c=mkE('span','oc');
+   const b=(txt,lab,fn,cls)=>{const x=mkE('button',cls||null,txt);x.type='button';x.setAttribute('aria-label',lab);x.onclick=e=>{e.stopPropagation();fn(x)};c.appendChild(x)};
+   if(m.seat>1)b('↑','Move '+(m.name||'player')+' up a seat',()=>hostUp(m));
+   b(m.seat?'Watch':'Play',m.seat?'Make '+(m.name||'player')+' watch':'Give '+(m.name||'player')+' a seat',()=>hostRole(m,m.seat?'watch':'play'));
+   if(m!==net.self)b('✕','Remove '+(m.name||'player'),x=>{if(!x.classList.contains('arm')){x.classList.add('arm');x.textContent='Remove';setTimeout(()=>{if(x.isConnected){x.classList.remove('arm');x.textContent='✕'}},2500);return}hostKick(m)},'kx');
+   r.appendChild(c)};
+  ps.appendChild(mkE('p','oh','Playing'));
+  for(let k=1;k<=cnt;k++){const aw=!!(net.away||[])[k],r=mkE('div','op'+(aw?' aw':'')),d=mkE('i');d.style.background='var(--p'+k+')';r.appendChild(d);r.appendChild(mkE('span',null,N[k]));
+   r.appendChild(mkE('em',null,[k==net.me?'You':'',k==net.hs?'Host':'',aw?'reconnecting…':''].filter(Boolean).join(' · ')));ctl(r,mem.find(m=>m.seat==k));ps.appendChild(r)}
+  if(!cnt)ps.appendChild(mkE('p','nt','Nobody is playing yet.'));
+  const wt=net.watch||[];
+  if(wt.length){ps.appendChild(mkE('p','oh','Watching'));const wm=H?mem.filter(m=>!m.seat):[];
+   wt.forEach((w,i)=>{const r=mkE('div','op wa'+(w.a?' aw':'')),d=mkE('i');r.appendChild(d);const me=H?wm[i]===net.self:net.wi===i;
+    r.appendChild(mkE('span',null,w.n||'Someone'));r.appendChild(mkE('em',null,[me?'You':'',w.h?'Host':'',w.a?'reconnecting…':''].filter(Boolean).join(' · ')));ctl(r,wm[i]);ps.appendChild(r)})}
   if(rj)ol.insertBefore(mkE('p','err','Connection lost. Reconnecting…'),ol.children[1]);
   ol.appendChild(ps);
-  ol.appendChild(mkE('p','nt',cnt<2?'Waiting for players. Until someone joins you can play every side yourself.':
-   cnt>2&&!MP[cur]?'This game is for 2, so players 3 and 4 watch. The party and dice games seat everyone.':
-   'Anyone can switch games or start a new one. A player joining or leaving restarts the round.'));
+  const tips=[];
+  if(net.me&&cnt<2)tips.push('Until someone else takes a seat you can play every side yourself.');
+  if(cnt>2&&!MP[cur])tips.push('This game is for 2, so seats 3 and 4 watch. The party and dice games seat everyone.');
+  tips.push(H?'You pick the games. Use ↑ to change the seat order and Play or Watch to choose who plays. Seat changes restart the round.':
+   net.me?'The host picks the games and who plays.':"You're watching. The host picks the games and can give you a seat.");
+  ol.appendChild(mkE('p','nt',tips.join(' ')));
   const nb2=mkE('button','lk','Change your name');nb2.type='button';nb2.onclick=()=>setNames(true);ol.appendChild(nb2);
   const lb=mkE('button','wide','Leave online game');lb.type='button';lb.style.marginTop='12px';lb.onclick=()=>leaveOnline();ol.appendChild(lb);return}
  ol.appendChild(mkE('h3',null,'Play online'));
- ol.appendChild(mkE('p','nt','Play on up to 4 devices. One person hosts and shares the code.'));
+ ol.appendChild(mkE('p','nt','Up to 4 people play, and anyone else can watch. One person hosts, shares the code and picks the games.'));
  const nr=mkE('div','row'),ni=mkE('input');ni.type='text';ni.maxLength=12;ni.placeholder='Your name';ni.value=myName;ni.autocomplete='off';ni.setAttribute('aria-label','Your name');
  ni.oninput=()=>setMyName(ni.value);nr.appendChild(ni);ol.appendChild(nr);
  const hb=mkE('button','wide pr',olBusy?'Connecting…':'Host a game');hb.type='button';hb.disabled=olBusy;hb.onclick=()=>hostCreate();ol.appendChild(hb);
  ol.appendChild(mkE('div','or','or join a game'));
+ const sg=mkE('div','seg jw');sg.setAttribute('role','radiogroup');sg.setAttribute('aria-label','Join as');
+ [['play','Play'],['watch','Watch']].forEach(([v,t])=>{const x=mkE('button',(olFill.role||'play')==v?'on':null);x.type='button';x.setAttribute('role','radio');x.setAttribute('aria-checked',(olFill.role||'play')==v);
+  x.appendChild(mkE('span',null,t));x.onclick=()=>{olFill.role=v;olFill()};sg.appendChild(x)});ol.appendChild(sg);
  const jr=mkE('div','row'),ci=mkE('input','cd'),jb=mkE('button',null,'Join');ci.type='text';ci.maxLength=5;ci.placeholder='Code';ci.autocomplete='off';ci.autocapitalize='characters';ci.spellcheck=false;
  ci.setAttribute('aria-label','Game code');ci.value=olFill.code||'';ci.oninput=()=>olFill.code=ci.value;
  ci.onkeydown=e=>{if(e.key=='Enter'){e.preventDefault();guestJoin(ci.value)}};jb.type='button';jb.disabled=olBusy;jb.onclick=()=>guestJoin(ci.value);
@@ -1337,6 +1374,7 @@ function rematchSoon(kind,txt,raw){if(replaying)return;clearTimeout(rmT);const E
  rm.innerHTML='';const top=document.createElement('div');top.className='rt';
  const ks=kind=='win'?[winnerOf(raw)]:tiedOf(raw);ks.forEach(k=>{const d=document.createElement('i');d.style.background='var(--p'+k+')';top.appendChild(d)});
  const t=document.createElement('b');t.textContent=kind=='win'?txt.replace(/ wins$/,' wins!').replace(/^You win$/,'You win!'):(/ tie$/.test(raw)?txt:"It's a draw");top.appendChild(t);rm.appendChild(top);
+ if(net&&!net.host){rm.appendChild(mkE('p','rw','Waiting for the host to pick what\'s next…'));setRM(true);return}
  const row=document.createElement('div');row.className='rb';
  const again=document.createElement('button');again.type='button';again.className='pr';again.textContent='Rematch';again.onclick=()=>{setRM(false);$('new').click()};
  const other=document.createElement('button');other.type='button';other.textContent='Pick another game';other.onclick=()=>{setRM(false);setGM(true)};
@@ -1344,11 +1382,11 @@ function rematchSoon(kind,txt,raw){if(replaying)return;clearTimeout(rmT);const E
 document.addEventListener('pointerdown',e=>{if(!rm.hidden&&!rm.contains(e.target))setRM(false)});
 document.addEventListener('keydown',e=>{if(e.key=='Escape'&&!rm.hidden)setRM(false)});
 /* Surprise me: a random game that suits how many people are playing */
-$('gsur').onclick=()=>{const people=net?(net.host?net.list.length+1:Object.keys(net.names||{}).length):(MP[cur]||np>2?np:2);
+$('gsur').onclick=()=>{const people=net?Math.max(2,net.nPlay||1):(MP[cur]||np>2?np:2);
  let pool=GAMES.filter(g=>g!=cur&&GF[g]&&(people>2?MP[g]:true));if(!pool.length)pool=GAMES.filter(g=>g!=cur);
  const g=pool[Math.random()*pool.length|0];setGM(false);if(net)netReq('pick',g);else pickGame(g);toast(gopts.find(o=>o.dataset.g==g).querySelector('span').textContent+'!')};
 /* First time a game is opened on this phone: a short card with the rules */
-const tpEl=$('tp');let tpT=0,seenTips=[];try{seenTips=JSON.parse(localStorage.getItem('tp-seen'))||[]}catch(e){}
+const tpEl=$('tp');let tpT=0,seenTips=[];try{const v=JSON.parse(localStorage.getItem('tp-seen'));if(Array.isArray(v))seenTips=v}catch(e){}
 function setTip(o){tpEl.hidden=!o;if(!o)clearTimeout(tpT)}
 function tipSoon(g){clearTimeout(tpT);setTip(false);if(replaying||seenTips.includes(g))return;tpT=setTimeout(()=>{if(cur!=g||replaying)return;
  const h0=HELP[g];if(!h0)return;const h=typeof h0=='function'?h0():h0;seenTips.push(g);try{localStorage.setItem('tp-seen',JSON.stringify(seenTips))}catch(e){}
