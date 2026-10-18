@@ -133,6 +133,14 @@ button:active{transform:scale(.94)}
 :root[data-skin="brass"]{color-scheme:dark;--bg:#0B1426;--cell:#12203A;--acc:#1F3560;--ink:#F2EAD3;--mut:#F2EAD3a0;--tint:#1F3560;--p1:#E0B65C;--p2:#8FB8E8;--p3:#8FC9A0;--p4:#E0867A;--sw:#E0B65C}
 :root[data-skin="bubblegum"]{color-scheme:light;--bg:#FFE8F4;--cell:#FFFFFF;--acc:#3B1D5A;--ink:#3B1D5A;--mut:#3B1D5Aa0;--tint:#3B1D5A;--p1:#00BFD8;--p2:#FF4D94;--p3:#7ED321;--p4:#FFA400;--sw:#FF4D94}
 :root[data-skin="neon"]{color-scheme:dark;--bg:#120A24;--cell:#1C1038;--acc:#3A1C7A;--ink:#F5ECFF;--mut:#F5ECFFa0;--tint:#3A1C7A;--p1:#00F0FF;--p2:#FF2E97;--p3:#B6FF3B;--p4:#FFE600;--sw:#00F0FF}
+:root[data-skin="mint"]{color-scheme:light;--bg:#E8F4EC;--cell:#FFFFFF;--acc:#7A5A43;--ink:#22302A;--mut:#22302Aa0;--tint:#2E9E78;--p1:#2E9E78;--p2:#C8553D;--p3:#3E6FB8;--p4:#D9A021;--sw:#2E9E78}
+:root[data-skin="beach"]{color-scheme:light;--bg:#FAEFD8;--cell:#FFFDF7;--acc:#2C8FBF;--ink:#1D3747;--mut:#1D3747a0;--tint:#2C8FBF;--p1:#1E86C6;--p2:#F2615A;--p3:#3A9E4B;--p4:#F0A21C;--sw:#2C8FBF}
+:root[data-skin="lavender"]{color-scheme:light;--bg:#F2EDFA;--cell:#FFFFFF;--acc:#9474C9;--ink:#2D2540;--mut:#2D2540a0;--tint:#9474C9;--p1:#7A4CC8;--p2:#F2875A;--p3:#169E95;--p4:#DE4F96;--sw:#9474C9}
+:root[data-skin="lemonade"]{color-scheme:light;--bg:#FFF8D2;--cell:#FFFFFF;--acc:#E6AE14;--ink:#2E2910;--mut:#2E2910a0;--tint:#E6AE14;--p1:#2A9FE5;--p2:#EF4C8A;--p3:#45B13E;--p4:#FF8419;--sw:#F2C230}
+:root[data-skin="deepsea"]{color-scheme:dark;--bg:#0A1B2A;--cell:#10283D;--acc:#1D4A6B;--ink:#E3F2FA;--mut:#E3F2FAa0;--tint:#1D4A6B;--p1:#4FD1E8;--p2:#FF7F6B;--p3:#7EE08A;--p4:#FFD25E;--sw:#4FD1E8}
+:root[data-skin="forest"]{color-scheme:dark;--bg:#0F1A14;--cell:#18271E;--acc:#2E4A38;--ink:#E8F0E2;--mut:#E8F0E2a0;--tint:#2E4A38;--p1:#F2D35B;--p2:#E8805F;--p3:#8FCB9B;--p4:#A9B8F0;--sw:#F2D35B}
+:root[data-skin="espresso"]{color-scheme:dark;--bg:#1C1310;--cell:#2A1D18;--acc:#4A3328;--ink:#F3E6D8;--mut:#F3E6D8a0;--tint:#4A3328;--p1:#E8B07A;--p2:#E8695B;--p3:#9CC48A;--p4:#8DB6E0;--sw:#E8B07A}
+:root[data-skin="galaxy"]{color-scheme:dark;--bg:#0D0B1E;--cell:#17142E;--acc:#2F2860;--ink:#EEEAFF;--mut:#EEEAFFa0;--tint:#2F2860;--p1:#9A8BFF;--p2:#FF6FB1;--p3:#4DE0C2;--p4:#FFC857;--sw:#9A8BFF}
 :root[data-skin="sorbet"]{color-scheme:light;--bg:#FFF4E0;--cell:#FFFFFF;--acc:#14B8A6;--ink:#2B2D42;--mut:#2B2D42a0;--tint:#14B8A6;--p1:#6C5CE7;--p2:#FF7A59;--p3:#F2B100;--p4:#2BA3F0;--sw:#FF7A59}
 #gr{position:relative}
 .sw{display:block;width:12px;height:12px;border-radius:50%;background:var(--sw);transition:background-color .12s}
@@ -507,7 +515,7 @@ html.cbm .d.p4::before,html.cbm #score #a4 i::after,html.cbm #wc span:nth-child(
 </style>
 <script>
 try{var k=localStorage.getItem('tc-skin')}catch(e){}
-document.documentElement.dataset.skin=['parchment','graphite','brass','bubblegum','neon','sorbet'].indexOf(k)>=0?k:(matchMedia('(prefers-color-scheme:dark)').matches?'graphite':'parchment');
+document.documentElement.dataset.skin=['parchment','mint','beach','lavender','lemonade','bubblegum','sorbet','graphite','brass','neon','deepsea','forest','espresso','galaxy'].indexOf(k)>=0?k:(matchMedia('(prefers-color-scheme:dark)').matches?'graphite':'parchment');
 </script>
 </head>
 <body>
@@ -999,7 +1007,7 @@ hp.onclick=()=>setHelp(hl.hidden);
 document.addEventListener('pointerdown',e=>{if(!hl.hidden&&!hl.contains(e.target)&&!hp.contains(e.target))setHelp(false)});
 document.addEventListener('keydown',e=>{if(e.key=='Escape'&&!hl.hidden){setHelp(false);hp.focus()}});
 /* Player names: default to the colour of the current theme, or whatever the players typed */
-const SKN={parchment:['Blue','Red','Green','Gold'],graphite:['Silver','Amber','Teal','Rose'],brass:['Gold','Sky','Sage','Salmon'],bubblegum:['Cyan','Pink','Lime','Orange'],neon:['Cyan','Magenta','Lime','Yellow'],sorbet:['Purple','Coral','Amber','Blue']};
+const SKN={parchment:['Blue','Red','Green','Gold'],deepsea:['Aqua','Coral','Kelp','Pearl'],forest:['Firefly','Ember','Fern','Moon'],espresso:['Caramel','Cherry','Pistachio','Blue'],galaxy:['Nebula','Star','Comet','Sun'],mint:['Mint','Clay','Blue','Honey'],beach:['Sea','Coral','Palm','Sun'],lavender:['Plum','Peach','Teal','Rose'],lemonade:['Sky','Pink','Green','Orange'],graphite:['Silver','Amber','Teal','Rose'],brass:['Gold','Sky','Sage','Salmon'],bubblegum:['Cyan','Pink','Lime','Orange'],neon:['Cyan','Magenta','Lime','Yellow'],sorbet:['Purple','Coral','Amber','Blue']};
 let CUST=['','','',''];
 try{const v=JSON.parse(localStorage.getItem('tc-names'));if(Array.isArray(v))CUST=[0,1,2,3].map(i=>typeof v[i]=='string'?v[i].slice(0,12):'')}catch(e){}
 function applyNames(){const dn=SKN[document.documentElement.dataset.skin]||SKN.parchment,used=[];
@@ -1027,14 +1035,18 @@ function setNames(o){nl.hidden=!o;nb.setAttribute('aria-expanded',o);if(o){nameF
 nb.onclick=()=>setNames(nl.hidden);
 document.addEventListener('pointerdown',e=>{if(!nl.hidden&&!nl.contains(e.target)&&!nb.contains(e.target))setNames(false)});
 document.addEventListener('keydown',e=>{if(e.key=='Escape'&&!nl.hidden){setNames(false);nb.focus()}});
-/* Themes */
-const SK=[['parchment','Parchment'],['graphite','Graphite'],['brass','Midnight Brass'],['bubblegum','Bubblegum'],['neon','Neon Arcade'],['sorbet','Sorbet']],
+/* Themes: 7 light and 7 dark. The menu switch flips between the two sets and each set remembers its last theme */
+const SKL=[['parchment','Parchment'],['mint','Mint Café'],['beach','Beach Day'],['lavender','Lavender'],['lemonade','Lemonade'],['bubblegum','Bubblegum'],['sorbet','Sorbet']],
+ SKD=[['graphite','Graphite'],['brass','Midnight Brass'],['neon','Neon Arcade'],['deepsea','Deep Sea'],['forest','Forest Night'],['espresso','Espresso'],['galaxy','Galaxy']],
  root=document.documentElement,tn=$('tn'),sw=document.querySelector('#thm .sw');
-let si=Math.max(0,SK.findIndex(x=>x[0]==root.dataset.skin)),tt=0;
-$('thm').onclick=()=>{si=(si+1)%SK.length;root.dataset.skin=SK[si][0];setTimeout(syncThemeColor,0);applyNames();if(!ol.hidden)olFill();if(!wl.hidden)winFill();
- try{localStorage.setItem('tc-skin',SK[si][0])}catch(e){}
+let darkOn=SKD.some(x=>x[0]==root.dataset.skin),SK=darkOn?SKD:SKL,si=Math.max(0,SK.findIndex(x=>x[0]==root.dataset.skin)),tt=0;
+function applySkin(k,say){root.dataset.skin=k;setTimeout(syncThemeColor,0);applyNames();if(typeof ui2names=='function')ui2names();if(!ol.hidden)olFill();if(!wl.hidden)winFill();
+ try{localStorage.setItem('tc-skin',k);localStorage.setItem(darkOn?'tc-skd':'tc-skl',k)}catch(e){}
  sw.classList.remove('n');void sw.offsetWidth;sw.classList.add('n');
- tn.textContent=SK[si][1];tn.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>tn.classList.remove('on'),900)};
+ if(say){tn.textContent=say;tn.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>tn.classList.remove('on'),900)}}
+$('thm').onclick=()=>{si=(si+1)%SK.length;applySkin(SK[si][0],SK[si][1])};
+function setDark(v){darkOn=!!v;SK=darkOn?SKD:SKL;let k=null;try{k=localStorage.getItem(darkOn?'tc-skd':'tc-skl')}catch(e){}
+ si=Math.max(0,SK.findIndex(x=>x[0]==k));applySkin(SK[si][0],SK[si][1])}
 
 /* Online play (PeerJS / WebRTC). One device hosts and is player 1; up to three others join with a 5-letter code.
    Guests send their moves to the host, the host relays them to everyone else, and every device runs the same move.
@@ -1257,6 +1269,7 @@ const MI={on:'<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.4 2.
  wn:'<path d="M8 4h8v5a4 4 0 0 1-8 0zM8 6H5.5v1.2A3 3 0 0 0 8 10.2M16 6h2.5v1.2a3 3 0 0 1-2.5 3M12 13v4M9 20.5h6M10 17h4v3.5h-4z"/>',
  hp:'<circle cx="12" cy="12" r="8.5"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.3 2.4c-.6.2-.9.7-.9 1.3v.7"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/>',
  ck:'<path d="M6 12.5l4 4 8-9"/>',
+ dk:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
  so:'<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/>',
  sx:'<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/>',
  vb:'<rect x="8" y="4" width="8" height="16" rx="2"/><path d="M4.5 8.5v7M19.5 8.5v7M2 10.5v3M22 10.5v3"/>',
@@ -1287,7 +1300,8 @@ function mmFill(){mnu.innerHTML='';
   b.innerHTML=icon+'<span class="ml"></span><i class="knob"></i>';b.querySelector('.ml').textContent=label;b.onclick=()=>{fn(!on);mmFill()};sw.appendChild(b)};
  tg(mIcon(sndOn?MI.so:MI.sx),'Sound',sndOn,setSnd);
  if(canVib)tg(mIcon(MI.vb),'Vibration',vibOn,setVib);
- tg(mIcon(MI.cb),'Shapes on pieces',cbOn,setCB)}
+ tg(mIcon(MI.cb),'Shapes on pieces',cbOn,setCB);
+ tg(mIcon(MI.dk),'Dark mode',darkOn,setDark)}
 function setMM(o){mnu.hidden=!o;mbt.setAttribute('aria-expanded',o);if(o){setGM(false);setLM(false);setHelp(false);setNames(false);setOnline(false);setWins(false);mmFill();const f=mnu.querySelector('.mr');f&&f.focus({preventScroll:true})}}
 mbt.onclick=()=>setMM(mnu.hidden);
 document.addEventListener('pointerdown',e=>{if(!mnu.hidden&&!mnu.contains(e.target)&&!mbt.contains(e.target))setMM(false)});
@@ -1309,6 +1323,11 @@ function sfxHit(freq,q,dur,vol,delay){const a=acx();if(!a)return;if(!acNoise){ac
 const T=sfxTone,Hn=sfxHit,rnd=Math.random;
 const bell=(f,d,v,dl)=>{T(f,0,d,'sine',v,dl);T(f*2.76,0,d*.6,'sine',v*.35,dl);T(f*5.4,0,d*.3,'sine',v*.12,dl)};
 const mar=(f,d,v,dl)=>{T(f,0,d,'sine',v,dl);T(f*4,0,d*.25,'sine',v*.22,dl)};
+const wood=(f,v,dl)=>{Hn(f*3,6,.035,v*2.2,dl);T(f,f*.92,.06,'triangle',v,dl)};
+const pan=(f,d,v,dl)=>{T(f,0,d,'sine',v,dl);T(f*2,0,d*.7,'sine',v*.5,dl);T(f*3.02,0,d*.35,'sine',v*.22,dl);T(f*1.003,0,d,'triangle',v*.25,dl)};
+const glass=(f,d,v,dl)=>{T(f,0,d,'sine',v,dl);T(f*3.01,0,d*.8,'sine',v*.3,dl);T(f*5.43,0,d*.5,'sine',v*.12,dl)};
+const drop=(f,v,dl)=>{T(f*.6,f*1.5,.09,'sine',v,dl);T(f*1.5,f*1.9,.04,'sine',v*.3,(dl||0)+.05)};
+const xylo=(f,d,v,dl)=>{T(f,0,d,'sine',v,dl);T(f*3.93,0,d*.3,'sine',v*.35,dl);Hn(f*4,4,.02,v*.8,dl)};
 function brass(f,d,v,dl,o2){o2=o2||{};const a=acx();if(!a)return;const t=a.currentTime+(dl||0),o=a.createOscillator(),fl=a.createBiquadFilter(),g=a.createGain(),pk=o2.bright||7,sus=o2.mellow||2.5;
  o.type=o2.wave||'sawtooth';if(o2.scoop){o.frequency.setValueAtTime(f*o2.scoop,t);o.frequency.exponentialRampToValueAtTime(f,t+.06)}else o.frequency.setValueAtTime(f,t);
  if(o2.vib&&d>.3){const lf=a.createOscillator(),lg=a.createGain();lf.frequency.value=o2.vib;lg.gain.setValueAtTime(0,t);lg.gain.linearRampToValueAtTime(f*.012,t+d*.6);lf.connect(lg);lg.connect(o.frequency);lf.start(t);lf.stop(t+d+.05)}
@@ -1376,6 +1395,102 @@ const SFXT={
   turn(){T(659,0,.06,'square',.045);T(784,0,.06,'square',.045,.08);T(1047,0,.13,'square',.05,.16)},
   win(){fanfare(1,.06,{wave:'square',bright:9,mellow:4,vib:8},(f,dl)=>T(f,0,.3,'square',.025,dl))},
   draw(){T(523,0,.12,'square',.045);T(392,0,.2,'square',.045,.13)}},
+ mint:{ /* cafe: wooden clicks and a soft counter bell */
+  tap(){wood(520,.12)},
+  pop(){wood(700,.13);T(1047,0,.12,'sine',.05,.02)},
+  clack(v){Hn(1900+rnd()*700,4,.05,.42*v);wood(380+rnd()*120,.09*v)},
+  tick(){wood(1200,.07)},
+  flip(){wood(300,.14);Hn(1400,2,.05,.2)},
+  nope(){wood(220,.12);wood(200,.1,.09)},
+  bust(){bell(392,.3,.1);bell(330,.3,.1,.16);bell(262,.6,.1,.32)},
+  bank(){bell(1175,.45,.1);bell(1568,.55,.08,.09)},
+  turn(){bell(659,.3,.09);bell(784,.3,.09,.09);bell(1047,.5,.1,.18)},
+  win(){fanfare(1,.09,{bright:3.6,mellow:1.7,vib:5},(f,dl)=>bell(f,.5,.05,dl))},
+  draw(){bell(587,.5,.09);bell(698,.55,.08,.15)}},
+ beach:{ /* steel drums and shells */
+  tap(){pan(587,.16,.1)},
+  pop(){pan(880,.18,.1)},
+  clack(v){Hn(3200+rnd()*900,9,.05,.3*v);T(2400+rnd()*600,0,.05,'sine',.06*v)},
+  tick(){T(2637,0,.04,'sine',.06);T(3520,0,.03,'sine',.03,.02)},
+  flip(){pan(440,.2,.1);Hn(2000,3,.05,.18)},
+  nope(){pan(294,.25,.09);pan(277,.3,.08,.11)},
+  bust(){pan(523,.25,.1);pan(440,.25,.1,.16);pan(349,.5,.1,.32)},
+  bank(){pan(1047,.3,.1);pan(1319,.4,.09,.09)},
+  turn(){pan(659,.22,.09);pan(784,.22,.09,.09);pan(1047,.4,.1,.18)},
+  win(){fanfare(1,.09,{bright:4,mellow:1.8,vib:5},(f,dl)=>pan(f,.45,.05,dl))},
+  draw(){pan(587,.45,.09);pan(698,.5,.08,.15)}},
+ lavender:{ /* glassy chimes */
+  tap(){glass(880,.18,.08)},
+  pop(){glass(1175,.22,.08)},
+  clack(v){Hn(4200+rnd()*800,10,.04,.28*v);glass(1800+rnd()*500,.08,.05*v)},
+  tick(){glass(2093,.08,.05)},
+  flip(){glass(659,.25,.08);Hn(2600,3,.04,.15)},
+  nope(){glass(370,.3,.08);glass(349,.35,.07,.12)},
+  bust(){glass(784,.4,.08);glass(659,.4,.08,.16);glass(523,.7,.08,.32)},
+  bank(){glass(1568,.5,.08);glass(2093,.6,.07,.09)},
+  turn(){glass(1047,.35,.07);glass(1319,.35,.07,.09);glass(1568,.55,.08,.18)},
+  win(){fanfare(1,.09,{bright:3.4,mellow:1.6,vib:5},(f,dl)=>glass(f*2,.6,.035,dl))},
+  draw(){glass(880,.55,.08);glass(1047,.6,.07,.15)}},
+ lemonade:{ /* fizzy pops and xylophone */
+  tap(){xylo(784,.12,.11)},
+  pop(){T(500,1200,.07,'sine',.12);Hn(5000,1,.04,.06,.03)},
+  clack(v){Hn(2800+rnd()*900,6,.04,.36*v);xylo(1400+rnd()*400,.05,.06*v)},
+  tick(){xylo(1568,.06,.07)},
+  flip(){xylo(523,.14,.11);Hn(4500,1,.08,.08)},
+  nope(){xylo(330,.18,.1);xylo(311,.2,.09,.1)},
+  bust(){xylo(784,.2,.11);xylo(622,.2,.1,.14);xylo(523,.2,.1,.28);T(400,90,.35,'sine',.08,.42)},
+  bank(){xylo(1047,.2,.11);xylo(1319,.2,.1,.08);xylo(1568,.3,.1,.16);for(let i=0;i<5;i++)Hn(5000+rnd()*3000,2,.03,.05,.1+i*.05)},
+  turn(){xylo(784,.15,.1);xylo(988,.15,.1,.09);xylo(1175,.25,.11,.18)},
+  win(){fanfare(1,.09,{bright:4.2,mellow:1.8,vib:5},(f,dl)=>xylo(f*2,.3,.05,dl))},
+  draw(){xylo(659,.3,.1);xylo(784,.35,.09,.15)}},
+ deepsea:{ /* bubbles and deep steel drums */
+  tap(){drop(500,.12)},
+  pop(){drop(760,.13)},
+  clack(v){Hn(2200+rnd()*700,5,.05,.32*v);drop(420+rnd()*200,.07*v)},
+  tick(){drop(1300,.06)},
+  flip(){pan(330,.22,.1);drop(900,.06,.05)},
+  nope(){pan(220,.28,.09);pan(208,.32,.08,.12)},
+  bust(){pan(392,.3,.1);pan(330,.3,.1,.16);pan(262,.6,.1,.32);drop(300,.08,.5)},
+  bank(){pan(784,.35,.1);pan(1047,.45,.09,.09);drop(1500,.05,.18)},
+  turn(){pan(523,.25,.09);pan(659,.25,.09,.09);pan(784,.45,.1,.18)},
+  win(){fanfare(1,.09,{bright:3.4,mellow:1.6,vib:5},(f,dl)=>pan(f/2,.5,.05,dl))},
+  draw(){pan(440,.5,.09);pan(523,.55,.08,.15)}},
+ forest:{ /* hollow wood, crickets and a night bell */
+  tap(){wood(330,.13)},
+  pop(){wood(470,.13);T(784,0,.15,'sine',.04,.03)},
+  clack(v){Hn(1500+rnd()*500,4,.06,.42*v);wood(260+rnd()*80,.1*v)},
+  tick(){Hn(5200,30,.03,.12);Hn(5200,30,.03,.1,.05)},
+  flip(){wood(220,.15);Hn(1100,2,.06,.18)},
+  nope(){wood(160,.13);wood(150,.11,.1)},
+  bust(){bell(294,.35,.1);bell(247,.35,.1,.17);bell(196,.7,.1,.34)},
+  bank(){bell(784,.5,.1);bell(1047,.6,.08,.1)},
+  turn(){bell(440,.35,.09);bell(523,.35,.09,.09);bell(659,.55,.1,.18)},
+  win(){fanfare(1,.09,{bright:3,mellow:1.5,vib:4.5},(f,dl)=>bell(f/2,.6,.05,dl))},
+  draw(){bell(392,.55,.09);bell(466,.6,.08,.15)}},
+ espresso:{ /* warm low marimba and cups */
+  tap(){mar(392,.16,.13)},
+  pop(){mar(587,.18,.13)},
+  clack(v){Hn(1300,3,.05,.26*v);mar(420+rnd()*120,.07,.09*v)},
+  tick(){mar(784,.06,.08)},
+  flip(){mar(294,.16,.12);Hn(1000,2,.04,.15)},
+  nope(){mar(220,.22,.1);mar(208,.26,.1,.1)},
+  bust(){mar(294,.22,.13);mar(247,.22,.12,.15);mar(196,.45,.12,.3)},
+  bank(){T(2400,0,.25,'sine',.05);mar(784,.22,.12,.02);mar(988,.3,.1,.1)},
+  turn(){mar(494,.18,.11);mar(587,.18,.11,.09);mar(784,.32,.12,.18)},
+  win(){fanfare(1,.09,{bright:3,mellow:1.5,vib:4.5},(f,dl)=>mar(f/2,.5,.07,dl))},
+  draw(){mar(440,.4,.11);mar(523,.45,.09,.14)}},
+ galaxy:{ /* shimmering space chimes */
+  tap(){glass(1047,.2,.07);T(2093,2349,.15,'sine',.02)},
+  pop(){glass(1397,.25,.07);T(1400,2800,.12,'sine',.03)},
+  clack(v){Hn(5000+rnd()*900,12,.04,.26*v);glass(2200+rnd()*600,.09,.045*v)},
+  tick(){glass(2637,.09,.04)},
+  flip(){T(600,1200,.15,'sine',.07);glass(784,.25,.06,.05)},
+  nope(){T(440,300,.25,'sine',.08);glass(330,.3,.05,.08)},
+  bust(){T(880,110,.8,'sine',.1);glass(523,.5,.05,.1)},
+  bank(){glass(1568,.6,.07);glass(2093,.7,.06,.08);glass(3136,.8,.04,.16)},
+  turn(){glass(1175,.4,.07);glass(1397,.4,.07,.09);glass(1760,.6,.08,.18)},
+  win(){fanfare(1,.09,{bright:3.6,mellow:1.6,vib:5},(f,dl)=>glass(f*2,.7,.03,dl))},
+  draw(){glass(988,.6,.07);glass(1175,.65,.06,.15)}},
  sorbet:{ /* soft marimba */
   tap(){mar(523,.15,.13)},
   pop(){mar(784,.18,.13)},
@@ -1394,7 +1509,7 @@ const SFX={};
 /* push-your-luck sounds: a climbing note per safe roll, a heartbeat as the pot grows, a cash register on banking and a sad trombone on a bust */
 {const skin=()=>document.documentElement.dataset.skin||'parchment';
  SFX.climb=n=>{const f=262*Math.pow(2,Math.min(n,72)/30),k=skin();
-  if(k=='brass')bell(f,.3,.11);else if(k=='sorbet')mar(f,.25,.12);else if(k=='neon')T(f,0,.09,'square',.045);else if(k=='bubblegum')T(f*.8,f,.12,'sine',.13);else T(f,0,.12,k=='graphite'?'sine':'triangle',.12)};
+  if(k=='brass'||k=='mint')bell(f,.3,.11);else if(k=='sorbet')mar(f,.25,.12);else if(k=='beach'||k=='deepsea')pan(f,.25,.1);else if(k=='forest')bell(f,.3,.1);else if(k=='espresso')mar(f,.25,.12);else if(k=='galaxy')glass(f*2,.3,.07);else if(k=='lavender')glass(f*2,.3,.08);else if(k=='lemonade')xylo(f*2,.2,.1);else if(k=='neon')T(f,0,.09,'square',.045);else if(k=='bubblegum')T(f*.8,f,.12,'sine',.13);else T(f,0,.12,k=='graphite'?'sine':'triangle',.12)};
  SFX.beat=n=>{const v=Math.min(.5,.16+n/160);T(70,46,.13,'sine',v);Hn(110,1.2,.07,v*.5);T(64,42,.11,'sine',v*.7,.16);Hn(100,1.2,.06,v*.35,.16)};
  SFX.cash=n=>{const c=Math.min(9,3+(n/12|0));Hn(1800,2,.05,.35);T(1568,0,.5,'sine',.1,.07);T(2093,0,.6,'sine',.09,.1);T(3136,0,.35,'sine',.04,.1);
   for(let i=0;i<c;i++)T(2600+rnd()*1800,0,.09,'sine',.05,.16+i*.055+rnd()*.03)};
