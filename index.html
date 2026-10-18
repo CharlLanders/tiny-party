@@ -1042,7 +1042,7 @@ function hostRecv(p,d){if(!net||!d||typeof d!='object')return;const sn=net.list.
  else if(d.t=='bye'){p.bye=true;dropSeat(p)}}
 function dropSeat(p){if(!net||!net.host)return;const i=net.list.indexOf(p);if(i<0)return;clearTimeout(p.awayT);net.list.splice(i,1);hostRoster();hostStart(cur,1);toast((p.name||'A player')+' left')}
 function sendSync(p){if(p.conn&&p.conn.open)p.conn.send({t:'sync',log:hlog,won:wonOn})}
-async function hostCreate(want,tries){if(olBusy&&!want)return;olErr='';olBusy=true;olFill();
+async function hostCreate(want,tries){if(typeof want!='string'||!/^[A-Z0-9]{5}$/.test(want))want=null;if(olBusy&&!want)return;olErr='';olBusy=true;olFill();
  try{await loadPeer()}catch(e){olBusy=false;olErr=e.message;olFill();return}
  const code=want||Array.from({length:5},()=>ABC[Math.random()*ABC.length|0]).join(''),peer=new Peer(PRE+code);
  peer.on('open',()=>{offNp=np;offVs=vs;net={host:true,me:1,code,peer,list:[],names:{}};olBusy=false;ss('tp-host',code);ss('tp-join',null);hostRoster();hostStart(cur,1);if(want)toast('Back online. Game code '+code)});
@@ -1136,7 +1136,7 @@ function olFill(){ol.innerHTML='';
  ol.appendChild(mkE('p','nt','Play on up to 4 devices. One person hosts and shares the code.'));
  const nr=mkE('div','row'),ni=mkE('input');ni.type='text';ni.maxLength=12;ni.placeholder='Your name';ni.value=myName;ni.autocomplete='off';ni.setAttribute('aria-label','Your name');
  ni.oninput=()=>setMyName(ni.value);nr.appendChild(ni);ol.appendChild(nr);
- const hb=mkE('button','wide pr',olBusy?'Connecting…':'Host a game');hb.type='button';hb.disabled=olBusy;hb.onclick=hostCreate;ol.appendChild(hb);
+ const hb=mkE('button','wide pr',olBusy?'Connecting…':'Host a game');hb.type='button';hb.disabled=olBusy;hb.onclick=()=>hostCreate();ol.appendChild(hb);
  ol.appendChild(mkE('div','or','or join a game'));
  const jr=mkE('div','row'),ci=mkE('input','cd'),jb=mkE('button',null,'Join');ci.type='text';ci.maxLength=5;ci.placeholder='Code';ci.autocomplete='off';ci.autocapitalize='characters';ci.spellcheck=false;
  ci.setAttribute('aria-label','Game code');ci.value=olFill.code||'';ci.oninput=()=>olFill.code=ci.value;
