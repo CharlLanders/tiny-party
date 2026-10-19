@@ -2271,11 +2271,12 @@ function pig(){
   if(k!='r'||!isInt(v,1,6))return;const p=t,my=gen,E=epoch;busy=true;draw();
   await rollDie(v,+dx||0,+dy||0,p);if(my!=gen||E!=epoch)return;busy=false;
   if(v==1){stopBeat();snd('trombone');buzz([60,40,60]);turn=0;t=p%np+1;draw(true);ui(t,N[p]+' rolled a 1! '+RL(),...sc);return}
-  turn+=v;snd('climb',turn);beat();draw();ui(t,N[p]+' rolled '+v+': '+turn+' this turn',...sc)}
+  turn+=v;if(sc[p-1]+turn>=GOAL){stopBeat();sc[p-1]+=turn;turn=0;over=true;draw();ui(p,N[p]+' wins',...sc);return}
+  snd('climb',turn);beat();draw();ui(t,N[p]+' rolled '+v+': '+turn+' this turn',...sc)}
  reset()}
 addGame({id:'pig',name:'Pig',group:'Dice games',status:'live',mp:true,play:pig,
  icon:'<path d="M6.4 7.6 5.2 3.6l4 1.9M17.6 7.6l1.2-4-4 1.9" fill="currentColor" fill-opacity=".25"/><circle cx="12" cy="12.6" r="7.4"/><ellipse cx="12" cy="14.9" rx="3.4" ry="2.4" fill="currentColor" fill-opacity=".25"/><circle cx="10.8" cy="14.9" r=".75" fill="currentColor" stroke="none"/><circle cx="13.2" cy="14.9" r=".75" fill="currentColor" stroke="none"/><circle cx="9.1" cy="10.6" r=".95" fill="currentColor" stroke="none"/><circle cx="14.9" cy="10.6" r=".95" fill="currentColor" stroke="none"/>',
- help:['Pig','For 2 to 4 players. On your turn, swipe or tap anywhere to throw the die as many times as you like. Each roll adds to your turn total.','Tap Bank to add your turn total to your score and pass the die on. But if you roll a 1, you lose everything from this turn.','The first player to bank 100 points wins.'],
+ help:['Pig','For 2 to 4 players. On your turn, swipe or tap anywhere to throw the die as many times as you like. Each roll adds to your turn total.','Tap Bank to add your turn total to your score and pass the die on. But if you roll a 1, you lose everything from this turn.','The first player to reach 100 wins, straight away, even before banking.'],
  css:`.pig{display:flex;flex-direction:column;gap:10px;padding:12px;border-radius:10px;background:var(--cell)}
  .pgl{display:flex;flex-direction:column;gap:6px}.pr2{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:10px}
  .pr2.on{background:color-mix(in srgb,var(--ink) 9%,transparent)}.pr2>i{width:12px;height:12px;border-radius:50%;flex:none}
@@ -2433,7 +2434,7 @@ function farkle(){
  const hook=()=>tdice.forEach((e,i)=>{if(e)e.onclick=()=>{if(!over&&!busy&&phase=='k'&&myTurn())play('t',i)}});
  function ensureTable(){if(phase!='k'||busy||farkled||!table.length||tdice.some(e=>e&&e.isConnected))return;if(replaying){setTimeout(ensureTable,120);return}
   const ks=new Set(keepers());tdice=placeDice(table.map((v,i)=>ks.has(i)?v:null),t,walls());hook();draw()}
- let sc,t,over,phase,table,sel,aside,turn,final,busy=false,first=1,gen=0,farkled=false;busyFn=()=>busy;
+ let sc,t,over,phase,table,sel,aside,turn,busy=false,first=1,gen=0,farkled=false;busyFn=()=>busy;
  function score(v){const c=[0,0,0,0,0,0,0];v.forEach(x=>c[x]++);let pts=0,all=true;
   for(let f=1;f<=6;f++){const n=c[f];if(n>=3)pts+=(f==1?1000:f*100)*(n-2);else if(f==1)pts+=100*n;else if(f==5)pts+=50*n;else if(n)all=false}
   if(v.length==6){const st=[1,2,3,4,5,6].every(f=>c[f]==1),tp=[1,2,3,4,5,6].filter(f=>c[f]==2).length==3;if((st||tp)&&(!all||pts<1500)){pts=1500;all=true}}
@@ -2457,7 +2458,7 @@ function farkle(){
    el('span','pv',r,String(sc[q-1]))}
   big.textContent=over?String(Math.max(...sc)):farkled?'Farkle!':String(turn+(sp&&sp.all?sp.pts:0));big.classList.toggle('bust',farkled);
   if(note=='bust'){big.classList.remove('pop');void big.offsetWidth;big.classList.add('pop')}
-  sub.textContent=over?'':farkled?'No scoring dice. Turn points lost':sp?(sp.all?'+'+sp.pts+' kept this throw':'Those dice don’t all score'):final?'Last round! Beat '+Math.max(...sc):'this turn';
+  sub.textContent=over?'':farkled?'No scoring dice. Turn points lost':sp?(sp.all?'+'+sp.pts+' kept this throw':'Those dice don’t all score'):'this turn';
   asideEl.innerHTML=aside.length?'<span>Kept</span>'+aside.map(v=>'<i>'+dieSvg(v)+'</i>').join(''):'';
   tdice.forEach((e,i)=>{if(e)e.classList.toggle('sel',sel.has(i))});if(phase=='k'&&!busy)setTimeout(ensureTable,0);
   const ok=phase=='k'&&selOk(),tot=turn+(ok?score(selVals()).pts:0);
@@ -2466,13 +2467,14 @@ function farkle(){
    !me?N[t]+' is choosing dice':!sel.size?'Tap the dice on the table you want to keep':!ok?'Keep only dice that score':
    (table.length-sel.size?'Swipe to throw '+(table.length-sel.size)+' more, or bank':'Hot dice! Swipe to throw all 6 again, or bank');
   g.style.setProperty('--tc','var(--p'+t+')');g.classList.toggle('rollme',!over&&!busy&&me&&(phase=='r'||ok))}
- reset=()=>{gen++;busy=false;clearTable();sc=Array(np).fill(0);if(first>np)first=1;t=first;first=first%np+1;over=false;final=0;phase='r';table=[];sel=new Set();aside=[];turn=0;farkled=false;draw();ui(t,RL(),...sc)};
- function next(p){clearTable();t=p%np+1;phase='r';sel=new Set();aside=[];turn=0;
-  if(final&&t==final){over=true;const w=winTxt(sc);draw();ui(winner(sc)||t,w,...sc);return true}return false}
+ reset=()=>{gen++;busy=false;clearTable();sc=Array(np).fill(0);if(first>np)first=1;t=first;first=first%np+1;over=false;phase='r';table=[];sel=new Set();aside=[];turn=0;farkled=false;draw();ui(t,RL(),...sc)};
+ function next(p){clearTable();t=p%np+1;phase='r';sel=new Set();aside=[];turn=0;return false}
  async function go(k,a,b,c){if(over||busy)return;const p=t;
-  if(k=='t'){if(phase!='k'||!isInt(a,0,table.length-1))return;if(sel.has(a))sel.delete(a);else sel.add(a);draw();ui(t,N[t]+' is choosing dice',...sc);return}
+  if(k=='t'){if(phase!='k'||!isInt(a,0,table.length-1))return;if(sel.has(a))sel.delete(a);else sel.add(a);
+   if(selOk()&&sc[p-1]+turn+score(selVals()).pts>=GOAL){sc[p-1]+=turn+score(selVals()).pts;turn=0;over=true;snd('cash',500);draw();ui(p,N[p]+' wins',...sc);return}
+   draw();ui(t,N[t]+' is choosing dice',...sc);return}
   if(k=='b'){if(phase!='k'||!selOk())return;const tot=turn+score(selVals()).pts;sc[p-1]+=tot;snd('bank');table=[];farkled=false;
-   let msg=N[p]+' banked '+tot+'. ';if(!final&&sc[p-1]>=GOAL){final=p;msg=N[p]+' reached '+GOAL+'! Everyone gets one last turn. ';toast('Last round!')}
+   let msg=N[p]+' banked '+tot+'. ';
    if(next(p))return;draw();ui(t,msg+RL(),...sc);return}
   if(k!='r'||!Array.isArray(a)||!a.every(v=>isInt(v,1,6)))return;
   if(phase=='k'){if(!selOk()||a.length!=(table.length-sel.size||6))return;turn+=score(selVals()).pts;if(table.length==sel.size){aside=[];toast('Hot dice!')}else aside.push(...selVals())}
@@ -2484,7 +2486,7 @@ function farkle(){
  reset()}
 addGame({id:'farkle',name:'Farkle',group:'Dice games',status:'live',mp:true,play:farkle,
  icon:'<rect x="2.5" y="8.5" width="11" height="11" rx="2.6"/><path d="M10.5 8.5V6A2.6 2.6 0 0 1 13.1 3.4h5.4A2.6 2.6 0 0 1 21.1 6v5.4A2.6 2.6 0 0 1 18.5 14h-5"/><circle cx="5.8" cy="11.8" r="1.05" fill="currentColor" stroke="none"/><circle cx="8" cy="14" r="1.05" fill="currentColor" stroke="none"/><circle cx="10.2" cy="16.2" r="1.05" fill="currentColor" stroke="none"/><circle cx="15.8" cy="6.2" r="1.05" fill="currentColor" stroke="none"/><circle cx="18.4" cy="8.8" r="1.05" fill="currentColor" stroke="none"/>',
- help:['Farkle','For 2 to 4 players. Swipe or tap to throw 6 dice. Dice that can\u2019t score fade away; tap the ones you want to keep. Only scoring dice can be kept: 1s are 100, 5s are 50, three of a kind is 100 × the number (three 1s are 1000), and a straight or three pairs is 1500.','Throw the rest again to add more, or tap Bank to save your turn points. If a throw has nothing that scores, that’s a Farkle and you lose the turn’s points. Keep all 6 and you get hot dice: throw all 6 again.','Reach 5000 and everyone else gets one last turn to beat you. The highest score wins.'],
+ help:['Farkle','For 2 to 4 players. Swipe or tap to throw 6 dice. Dice that can\u2019t score fade away; tap the ones you want to keep. Only scoring dice can be kept: 1s are 100, 5s are 50, three of a kind is 100 × the number (three 1s are 1000), and a straight or three pairs is 1500.','Throw the rest again to add more, or tap Bank to save your turn points. If a throw has nothing that scores, that’s a Farkle and you lose the turn’s points. Keep all 6 and you get hot dice: throw all 6 again.','The first player to reach 5000 wins, the moment they keep the dice that get them there.'],
  css:`.fk{display:flex;flex-direction:column;gap:6px;padding:10px;border-radius:10px;background:var(--cell);aspect-ratio:auto!important;height:100%;container-type:size;overflow:hidden}
  .fk .pgl{gap:3px}.fk .pr2{padding:4px 8px}
  .fk.np34 .pgl{display:grid;grid-template-columns:1fr 1fr;gap:3px 6px}.fk.np34 .pr2{gap:6px;padding:4px 6px}.fk.np34 .pr2 .pn{width:auto;flex:0 1 auto;max-width:5.5em}.fk.np34 .pr2 .pv{width:auto;min-width:2.4em;font-size:14px}
